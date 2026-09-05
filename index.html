@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Тест-драйв — перепроверь ответ из Главы 1</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+<style>
+[hidden]{ display:none !important; }
+
+:root{
+  --card:#F6F6F6;
+  --ink:#1A0A0F;
+  --muted:#808080;
+  --line:#B0B0B0;
+  --accent:#E30613;
+  --accent-dark:#C00510;
+  --teal:#2E8B8F;
+}
+
+*{ box-sizing:border-box; }
+html,body{ margin:0; background:#FFFFFF; }
+body{
+  font-family:"Montserrat",system-ui,sans-serif;
+  font-size:16px; line-height:1.5; color:var(--ink);
+  padding:24px;
+}
+.wrap{ max-width:860px; margin:0 auto; }
+
+/* шапка */
+.td__head{
+  display:flex; justify-content:space-between; align-items:baseline;
+  gap:12px; flex-wrap:wrap; margin:0 0 12px;
+}
+.td__overline{
+  margin:0; font-weight:800; font-size:13px;
+  letter-spacing:.16em; text-transform:uppercase; color:var(--muted);
+}
+.rdot{
+  display:inline-block; width:6px; height:6px; border-radius:50%;
+  background:var(--accent); margin-left:8px; vertical-align:middle;
+}
+.td__time{ font-size:13px; color:var(--muted); }
+
+.td__title{
+  font-weight:800; font-size:clamp(20px,3vw,26px);
+  line-height:1.35; margin:0 0 10px;
+}
+.td__lead{ margin:0 0 24px; max-width:72ch; }
+
+/* шаги */
+.td__steps{
+  background:var(--card); border-radius:16px;
+  padding:clamp(18px,3.5vw,28px) clamp(18px,3.5vw,32px);
+  list-style:none; margin:0;
+}
+.td__step{
+  display:grid; grid-template-columns:auto 1fr;
+  gap:14px; align-items:start; padding:14px 6px;
+}
+.td__step + .td__step{ border-top:1px solid var(--line); }
+.td__step-num{
+  font-weight:800; font-size:13px; letter-spacing:.08em;
+  color:var(--muted); padding-top:3px; white-space:nowrap;
+}
+.td__step-text{ margin:0; max-width:66ch; }
+
+/* итоговый вопрос */
+.td__final{
+  display:flex; align-items:flex-start; gap:12px;
+  margin:22px 0 0; font-weight:700; max-width:72ch;
+}
+.td__final-dot{
+  flex:none; width:8px; height:8px; border-radius:50%;
+  background:var(--accent); margin-top:7px;
+}
+
+/* поле для вывода */
+.td__input{
+  width:100%; min-height:110px; resize:vertical;
+  margin-top:14px; padding:14px 16px;
+  border:1px solid var(--line); border-radius:12px;
+  background:#FFFFFF; color:var(--ink);
+  font:400 16px/1.5 "Montserrat",system-ui,sans-serif;
+  transition:border-color .24s, box-shadow .24s;
+}
+.td__input::placeholder{ color:var(--muted); }
+.td__input:focus{
+  outline:none; border-color:var(--teal);
+  box-shadow:inset 0 0 0 1px var(--teal);
+}
+
+/* промпт в рамке + копирование */
+.td__letter{
+  background:#FFFFFF; border:1px solid var(--line); border-radius:16px;
+  padding:clamp(18px,3.5vw,28px) clamp(18px,3.5vw,32px);
+  margin:20px 0;
+}
+.td__letter-head{
+  display:flex; justify-content:space-between; align-items:baseline;
+  gap:12px; margin:0 0 12px;
+}
+.td__letter-label{
+  margin:0; font-weight:800; font-size:13px;
+  letter-spacing:.16em; text-transform:uppercase; color:var(--muted);
+}
+.td__copy{
+  flex:none; background:none; border:0; cursor:pointer; padding:2px 0;
+  font:700 13px "Montserrat",system-ui,sans-serif; color:var(--accent);
+  transition:color .2s; white-space:nowrap;
+}
+.td__copy:hover{ color:var(--accent-dark); }
+.td__copy.is-done{ color:var(--muted); }
+.td__copy:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; border-radius:4px; }
+.td__prompt-text{ margin:0; }
+
+/* отметка: кнопка → штамп */
+.td__mark{ margin-top:28px; }
+.td__btn{
+  font:700 16px "Montserrat",system-ui,sans-serif;
+  padding:15px 32px; border:0; border-radius:12px; cursor:pointer;
+  background:var(--accent); color:#FFFFFF;
+  transition:background .24s;
+}
+.td__btn:hover{ background:var(--accent-dark); }
+.td__btn:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+.td__stamp{
+  display:inline-block;
+  padding:12px 28px;
+  border:2px solid var(--accent); border-radius:10px;
+  color:var(--accent);
+  font-weight:800; font-size:20px;
+  letter-spacing:.18em; text-transform:uppercase;
+  transform:rotate(-4deg);
+  animation:stampIn .3s cubic-bezier(.2,1.4,.4,1) both;
+}
+@keyframes stampIn{
+  from{ opacity:0; transform:rotate(-4deg) scale(1.6); }
+  to  { opacity:1; transform:rotate(-4deg) scale(1); }
+}
+
+/* ============ ПРОДВИНУТЫЙ УРОВЕНЬ ============ */
+.td-adv{
+  background:#FFFFFF; border:1px solid var(--line); border-radius:16px;
+  padding:clamp(24px,4vw,36px) clamp(20px,4vw,40px);
+}
+.td-adv .td__steps{ margin:20px 0 0; }
+
+/* кнопка возврата */
+.td__back{
+  background:none; border:0; cursor:pointer; padding:0;
+  margin:0 0 18px;
+  font:700 13px "Montserrat",system-ui,sans-serif; color:var(--muted);
+  transition:color .2s;
+}
+.td__back:hover{ color:var(--accent); }
+.td__back:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; border-radius:4px; }
+
+/* появление секций */
+.td-appear{ animation:advIn 300ms ease both; }
+@keyframes advIn{ from{ opacity:0; transform:translateY(14px); } to{ opacity:1; transform:none; } }
+
+@media (max-width:560px){ body{ padding:16px; } }
+@media (prefers-reduced-motion:reduce){
+  *{ animation:none !important; transition:none !important; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============ ЗАДАНИЕ 1 ============ -->
+  <section id="mainSec" aria-label="Тест-драйв: перепроверь ответ из Главы 1">
+    <div class="td__head">
+      <p class="td__overline">Тест-драйв<span class="rdot" aria-hidden="true"></span></p>
+      <span class="td__time">7–10 минут</span>
+    </div>
+    <h2 class="td__title">Перепроверь ответ из Главы 1</h2>
+    <p class="td__lead">Вспомни тест‑драйв из первой главы: ты задавал(а) Perplexity рабочий вопрос
+      и получил(а) ответ с источниками. Сейчас проверь этот же ответ по пяти шагам.</p>
+
+    <ol class="td__steps">
+      <li class="td__step">
+        <span class="td__step-num">01<span class="rdot" aria-hidden="true"></span></span>
+        <p class="td__step-text"><b>Stop.</b> Насколько критична точность этого ответа для твоей работы?</p>
+      </li>
+      <li class="td__step">
+        <span class="td__step-num">02<span class="rdot" aria-hidden="true"></span></span>
+        <p class="td__step-text"><b>Проверь источник.</b> Кликни на 2–3 номера источников в ответе.
+          Оцени по 4 критериям: авторитетность, актуальность, точность, цель.</p>
+      </li>
+      <li class="td__step">
+        <span class="td__step-num">03<span class="rdot" aria-hidden="true"></span></span>
+        <p class="td__step-text"><b>Найди второе мнение.</b> Выбери один ключевой факт и найди его
+          в обычном поиске.</p>
+      </li>
+      <li class="td__step">
+        <span class="td__step-num">04<span class="rdot" aria-hidden="true"></span></span>
+        <p class="td__step-text"><b>Дойди до первоисточника.</b> Если факт важный — открой оригинал
+          (закон, исследование).</p>
+      </li>
+      <li class="td__step">
+        <span class="td__step-num">05<span class="rdot" aria-hidden="true"></span></span>
+        <p class="td__step-text"><b>Сохрани ссылку.</b> Зафиксируй URL и дату проверки.</p>
+      </li>
+    </ol>
+
+    <p class="td__final">
+      <span class="td__final-dot" aria-hidden="true"></span>
+      Итог: можно ли доверять ответу? Какие моменты вызвали сомнения?
+    </p>
+    <textarea class="td__input" id="mainInput"
+      placeholder="Например: ответу можно доверять частично — источники свежие, но один факт не подтвердился…"></textarea>
+
+    <div class="td__mark">
+      <button class="td__btn" id="doneBtn" type="button">Я попробовал(а)</button>
+      <span class="td__stamp" id="stamp" role="status" hidden>Сделано</span>
+    </div>
+  </section>
+
+  <!-- ============ ПРОДВИНУТЫЙ УРОВЕНЬ (поверх задания 1) ============ -->
+  <section class="td-adv" id="advSec" hidden aria-label="Продвинутый уровень: сравни две точки зрения">
+    <button class="td__back" id="backBtn" type="button">← Вернуться к заданию 1</button>
+
+    <div class="td__head">
+      <p class="td__overline">Продвинутый уровень<span class="rdot" aria-hidden="true"></span></p>
+      <span class="td__time">5–7 минут</span>
+    </div>
+    <h2 class="td__title">Сравни две точки зрения</h2>
+    <p class="td__lead">Если хочешь глубже потренировать навык работы с противоречивой информацией —
+      направь в Perplexity промпт по спорной теме:</p>
+
+    <div class="td__letter">
+      <div class="td__letter-head">
+        <p class="td__letter-label">Промпт<span class="rdot" aria-hidden="true"></span></p>
+        <button class="td__copy" id="copyBtn" type="button">Скопировать</button>
+      </div>
+      <p class="td__prompt-text" id="promptText">Как удалённая работа влияет на продуктивность? Приведи две противоположные точки зрения с источниками и датами.</p>
+    </div>
+
+    <p class="td__lead" style="margin:0;">Получив ответ:</p>
+    <ol class="td__steps">
+      <li class="td__step">
+        <span class="td__step-num">01<span class="rdot" aria-hidden="true"></span></span>
+        <p class="td__step-text"><b>Открой источники</b> у каждой точки зрения.</p>
+      </li>
+      <li class="td__step">
+        <span class="td__step-num">02<span class="rdot" aria-hidden="true"></span></span>
+        <p class="td__step-text"><b>Оцени по 4 критериям:</b> кто авторитетнее, свежее, точнее, объективнее?</p>
+      </li>
+      <li class="td__step">
+        <span class="td__step-num">03<span class="rdot" aria-hidden="true"></span></span>
+        <p class="td__step-text"><b>Найди в обычном поиске</b> ещё один независимый источник по теме.</p>
+      </li>
+      <li class="td__step">
+        <span class="td__step-num">04<span class="rdot" aria-hidden="true"></span></span>
+        <p class="td__step-text"><b>Зафиксируй:</b> где факты совпадают, где расходятся, какой вывод
+          ты сам(а) делаешь.</p>
+      </li>
+    </ol>
+
+    <p class="td__final">
+      <span class="td__final-dot" aria-hidden="true"></span>
+      Это упражнение учит не искать «одну правду», а видеть спектр мнений и делать взвешенный
+      вывод — навык, который отличает сильную аналитику от поверхностного пересказа.
+    </p>
+
+    <div class="td__mark">
+      <button class="td__btn" id="advBtn" type="button">Я попробовал(а)</button>
+      <span class="td__stamp" id="advStamp" role="status" hidden>Сделано</span>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var mainSec = document.getElementById('mainSec');
+  var doneBtn = document.getElementById('doneBtn');
+  var stamp   = document.getElementById('stamp');
+  var advSec  = document.getElementById('advSec');
+  var advBtn  = document.getElementById('advBtn');
+  var advStamp= document.getElementById('advStamp');
+  var backBtn = document.getElementById('backBtn');
+  var copyBtn = document.getElementById('copyBtn');
+  var prompt  = document.getElementById('promptText');
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function appear(sec){
+    if (reduced) return;
+    sec.classList.add('td-appear');
+    sec.addEventListener('animationend', function(){
+      sec.classList.remove('td-appear');
+    }, { once:true });
+  }
+
+  /* задание 1 выполнено → продвинутый уровень поверх */
+  doneBtn.addEventListener('click', function(){
+    doneBtn.hidden = true;
+    stamp.hidden = false;
+    mainSec.hidden = true;
+    advSec.hidden = false;
+    appear(advSec);
+  });
+
+  /* возврат к заданию 1 */
+  backBtn.addEventListener('click', function(){
+    advSec.hidden = true;
+    mainSec.hidden = false;
+    appear(mainSec);
+  });
+
+  /* штамп продвинутого уровня */
+  advBtn.addEventListener('click', function(){
+    advBtn.hidden = true;
+    advStamp.hidden = false;
+  });
+
+  /* копирование промпта (с фолбэком для iframe) */
+  function copyDone(ok){
+    copyBtn.textContent = ok ? 'Скопировано ✓' : 'Не скопировалось';
+    copyBtn.classList.toggle('is-done', ok);
+    setTimeout(function(){
+      copyBtn.textContent = 'Скопировать';
+      copyBtn.classList.remove('is-done');
+    }, 1600);
+  }
+  function fallbackCopy(text){
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try{ ok = document.execCommand('copy'); }catch(e){}
+    document.body.removeChild(ta);
+    copyDone(ok);
+  }
+  copyBtn.addEventListener('click', function(){
+    var text = prompt.textContent.trim();
+    if (navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(text)
+        .then(function(){ copyDone(true); }, function(){ fallbackCopy(text); });
+    } else {
+      fallbackCopy(text);
+    }
+  });
+})();
+</script>
+</body>
+</html>
