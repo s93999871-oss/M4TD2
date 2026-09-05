@@ -144,6 +144,45 @@ body{
   to  { opacity:1; transform:rotate(-4deg) scale(1); }
 }
 
+/* ============ ТИЗЕР УРОВНЯ PRO ============ */
+.td__pro-teaser{
+  margin-top:24px;
+  background:var(--card); border-radius:16px;
+  padding:20px 24px;
+  display:flex; align-items:center; gap:16px;
+  cursor:pointer;
+  transition:background .2s, box-shadow .2s;
+  animation:proIn 300ms ease both;
+}
+.td__pro-teaser:hover{
+  background:#EFEFEF;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+}
+.td__pro-teaser:focus-visible{
+  outline:2px solid var(--accent); outline-offset:2px;
+}
+@keyframes proIn{
+  from{ opacity:0; transform:translateY(10px); }
+  to{ opacity:1; transform:translateY(0); }
+}
+.td__pro-icon{
+  flex:none; width:40px; height:40px; border-radius:50%;
+  background:var(--accent); color:#FFFFFF;
+  display:flex; align-items:center; justify-content:center;
+  font-weight:800; font-size:16px;
+}
+.td__pro-text{ flex:1; }
+.td__pro-title{ margin:0 0 4px; font-weight:800; font-size:16px; }
+.td__pro-desc{ margin:0; font-size:13px; color:var(--muted); }
+.td__pro-arrow{
+  flex:none; font-size:20px; color:var(--muted);
+  transition:transform .2s, color .2s;
+}
+.td__pro-teaser:hover .td__pro-arrow{
+  transform:translateX(4px);
+  color:var(--accent);
+}
+
 /* ============ ПРОДВИНУТЫЙ УРОВЕНЬ ============ */
 .td-adv{
   background:#FFFFFF; border:1px solid var(--line); border-radius:16px;
@@ -221,6 +260,17 @@ body{
       <button class="td__btn" id="doneBtn" type="button">Я попробовал(а)</button>
       <span class="td__stamp" id="stamp" role="status" hidden>Сделано</span>
     </div>
+
+    <!-- ТИЗЕР УРОВНЯ PRO -->
+    <div class="td__pro-teaser" id="proTeaser" hidden role="button" tabindex="0"
+         aria-label="Открыть уровень PRO">
+      <div class="td__pro-icon">PRO</div>
+      <div class="td__pro-text">
+        <p class="td__pro-title">Хочешь больше? Попробуй уровень PRO</p>
+        <p class="td__pro-desc">Сравни две противоположные точки зрения и сделай взвешенный вывод</p>
+      </div>
+      <span class="td__pro-arrow">→</span>
+    </div>
   </section>
 
   <!-- ============ ПРОДВИНУТЫЙ УРОВЕНЬ (поверх задания 1) ============ -->
@@ -282,16 +332,17 @@ body{
 (function(){
   "use strict";
 
-  var mainSec = document.getElementById('mainSec');
-  var doneBtn = document.getElementById('doneBtn');
-  var stamp   = document.getElementById('stamp');
-  var advSec  = document.getElementById('advSec');
-  var advBtn  = document.getElementById('advBtn');
-  var advStamp= document.getElementById('advStamp');
-  var backBtn = document.getElementById('backBtn');
-  var copyBtn = document.getElementById('copyBtn');
-  var prompt  = document.getElementById('promptText');
-  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var mainSec   = document.getElementById('mainSec');
+  var doneBtn   = document.getElementById('doneBtn');
+  var stamp     = document.getElementById('stamp');
+  var proTeaser = document.getElementById('proTeaser');
+  var advSec    = document.getElementById('advSec');
+  var advBtn    = document.getElementById('advBtn');
+  var advStamp  = document.getElementById('advStamp');
+  var backBtn   = document.getElementById('backBtn');
+  var copyBtn   = document.getElementById('copyBtn');
+  var prompt    = document.getElementById('promptText');
+  var reduced   = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   function appear(sec){
     if (reduced) return;
@@ -301,13 +352,26 @@ body{
     }, { once:true });
   }
 
-  /* задание 1 выполнено → продвинутый уровень поверх */
-  doneBtn.addEventListener('click', function(){
-    doneBtn.hidden = true;
-    stamp.hidden = false;
+  function openAdv(){
     mainSec.hidden = true;
     advSec.hidden = false;
     appear(advSec);
+  }
+
+  /* задание 1 выполнено → штамп + тизер PRO */
+  doneBtn.addEventListener('click', function(){
+    doneBtn.hidden = true;
+    stamp.hidden = false;
+    proTeaser.hidden = false;
+  });
+
+  /* клик по тизеру PRO → открыть продвинутый уровень */
+  proTeaser.addEventListener('click', openAdv);
+  proTeaser.addEventListener('keydown', function(e){
+    if (e.key === 'Enter' || e.key === ' '){
+      e.preventDefault();
+      openAdv();
+    }
   });
 
   /* возврат к заданию 1 */
